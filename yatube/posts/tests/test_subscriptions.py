@@ -83,9 +83,9 @@ class PostsPagesTests(TestCase):
         follower = User.objects.create_user(username=USERNAME)
         self.authorized_client.force_login(follower)
         Follow.objects.create(
-                user=follower,
-                author=self.user
-            )
+            user=follower,
+            author=self.user
+        )
         response = self.authorized_client.get(reverse('posts:follow_index'))
         self.assertIn(self.post, response.context['page_obj'])
         # Пост не отображается у неподписчиков
