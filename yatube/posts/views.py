@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.cache import cache_page
 from django.core.paginator import Paginator
-from django.utils import timezone
 from .models import Post, Group, User, Comment, Follow
 from .forms import PostForm, CommentForm
 
@@ -88,7 +87,6 @@ def post_create(request):
         return render(request, template, {'form': form})
     post = form.save(commit=False)
     post.author = request.user
-    post.pub_date = timezone.now()
     post.save()
     return redirect('posts:profile', username=request.user)
 
@@ -96,7 +94,6 @@ def post_create(request):
 def post_edit(request, pk):
     template = 'posts/create_post.html'
     post = get_object_or_404(Post, pk=pk)
-    is_edit = True
     form = PostForm(
         request.POST or None,
         files=request.FILES or None,
@@ -107,7 +104,7 @@ def post_edit(request, pk):
     if not form.is_valid():
         context = {
             'form': form,
-            'is_edit': is_edit,
+            'is_edit': True,
             'post': post,
         }
         return render(request, template, context)

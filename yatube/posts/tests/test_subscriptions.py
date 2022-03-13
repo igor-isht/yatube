@@ -38,6 +38,7 @@ class PostsPagesTests(TestCase):
 
     def setUp(self):
         cache.clear()
+        self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
 
@@ -49,8 +50,10 @@ class PostsPagesTests(TestCase):
         # Подписка
         subscriptions_count = Follow.objects.count()
         # Подписываемся на автора
-        self.authorized_client.get(reverse(
-            'posts:profile_follow', kwargs={'username': self.post.author}))
+        response = self.authorized_client.get(reverse(
+            'posts:profile_follow', kwargs={'username': self.post.author}),
+            follow=True)
+        self.assertRedirects(response, reverse('posts:follow_index'))
         # Объект Follow существует
         self.assertTrue(
             Follow.objects.filter(

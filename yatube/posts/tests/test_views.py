@@ -1,17 +1,14 @@
 import shutil
 import tempfile
 
-from django.contrib.auth import get_user_model
 from django.test import Client, TestCase, override_settings
 from django.core.cache import cache
 from django.conf import settings
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django import forms
-from posts.models import Post, Group
+from posts.models import Post, Group, User
 
-
-User = get_user_model()
 TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 USERNAME = 'MyName'
 AUTHOR = 'аuthor'
@@ -160,19 +157,3 @@ class PostsPagesTests(TestCase):
             'posts:group_list', kwargs={'slug': SECOND_GROUP_URL}))
         post_obj = response.context['page_obj']
         self.assertNotIn(self.post, post_obj)
-
-    # Тест кэширования
-    def test_cache_index_page(self):
-        # Загружаем страницу
-        response = self.authorized_client.get(reverse('posts:index'))
-        content = response.content
-        # Удаляем пост
-        posts_count = Post.objects.count()
-        Post.objects.filter(text=TEST_TEXT, pk=posts_count).delete()
-        # Смотрим, изменилась ли страница
-        response = self.authorized_client.get(reverse('posts:index'))
-        self.assertEqual(content, response.content)
-        # Очистка кэша, запрос и сравнение
-        cache.clear()
-        response = self.authorized_client.get(reverse('posts:index'))
-        self.assertNotEqual(content, response.content)
