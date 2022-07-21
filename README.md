@@ -17,7 +17,7 @@ git clone https://github.com/igor-isht/yatube.git
 ```
 
 ```
-cd yatube
+cd yatube/
 ```
 
 Cоздать и активировать виртуальное окружение:
