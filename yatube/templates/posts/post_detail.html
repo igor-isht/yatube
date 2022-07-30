@@ -13,9 +13,11 @@
           <!-- если у поста есть группа -->   
             <li class="list-group-item">
               Группа: {{ post.group }}
-              <a href="{% url 'posts:group_list' post.group.slug %}">
-                все записи группы
-              </a>
+              {% if post.group %}
+                <p><a href="{% url 'posts:group_list' post.group.slug %}">
+                  все записи группы
+                </a></p>
+              {% endif %}
             </li>
             <li class="list-group-item">
               Автор: {{ post.author.get_full_name }}
