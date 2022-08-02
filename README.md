@@ -58,3 +58,5 @@ python manage.py runserver
 ```
 
 Готово! Сервис досткпен по адресу http://127.0.0.1:8000/
+
+Юнит-тесты предоставлены [Яндекс.Практикумом](https://github.com/yandex-praktikum)
